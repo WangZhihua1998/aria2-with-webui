@@ -1,6 +1,6 @@
-FROM alpine:edge
+FROM multiarch/alpine:armhf-edge
 
-MAINTAINER xujinkai <jack777@xujinkai.net>
+MAINTAINER WangZhihua <1069155322wzh@gmail.com>
 
 RUN apk update && \
 	apk add --no-cache --update bash && \
@@ -10,8 +10,8 @@ RUN apk update && \
 	apk add --no-cache --update aria2 && \
 	apk add git && \
 	git clone https://github.com/ziahamza/webui-aria2 /aria2-webui && \
-    rm /aria2-webui/.git* -rf && \
-    apk del git && \
+	rm /aria2-webui/.git* -rf && \
+	apk del git && \
 	apk add --update darkhttpd
 
 ADD files/start.sh /conf-copy/start.sh
