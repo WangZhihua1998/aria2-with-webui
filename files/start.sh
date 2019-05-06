@@ -9,6 +9,10 @@ if [ ! -f /conf/on-complete.sh ]; then
 	cp /conf-copy/on-complete.sh /conf/on-complete.sh
 fi
 
+if [ ! -f /data/log.html ]; then
+	echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' >/data/log.html
+fi
+	
 chmod +x /conf/on-complete.sh
 touch /conf/aria2.session
 
