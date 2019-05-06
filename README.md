@@ -1,4 +1,4 @@
-# 此项目无限期停止维护。NO LONGER SUPPORT。
+# 自用-为ARM开发板构建下载机环境
 
 Pleases Fork this project and modify for yourself.
 
@@ -28,10 +28,12 @@ xujinkai/aria2-with-webui
 II. Open `http://serverip:6880/` for aria2-webui, open `http://serverip:6888/` to browse data folder.  
 
 ### Build:  
+在amd64上可以使用<a href="https://hub.docker.com/r/multiarch/qemu-user-static">multiarch/qemu-user-static</a>进行构建
+
 `sudo docker build -f Dockerfile -t xujinkai/aria2-with-webui .`  
 
 ### Link:  
 https://github.com/aria2/aria2  
 https://github.com/ziahamza/webui-aria2  
-
-https://github.com/acgotaku/BaiduExporter  
+https://github.com/acgotaku/BaiduExporter 
+https://github.com/XUJINKAI/aria2-with-webui
