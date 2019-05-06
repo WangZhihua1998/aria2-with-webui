@@ -14,7 +14,7 @@ You can edit the config file out of the image.
 ### Install
 1. Download the image from release.
 
-2. Just Decompress it to a tarball.
+2. Just decompress it to a tarball(`xz -d -k aria2-with-webui.tar.xz`).
 
 3. Load the decompressed image with `docker load -i aria2-with-webui.tar`
 
