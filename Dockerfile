@@ -8,12 +8,12 @@ RUN apk update && \
 	mkdir -p /conf-copy && \
 	mkdir -p /data && \
 	apk add --no-cache --update aria2 && \
-	apk add git && \
+	apk add --no-cache git && \
 	git clone https://github.com/ziahamza/webui-aria2 /aria2-webui && \
 	rm /aria2-webui/.git* -rf && \
 	apk del git && \
-	apk add --update darkhttpd && \
-	apk add tzdata && \
+	apk add --no-cache --update darkhttpd && \
+	apk add --no-cache tzdata && \
 	cp -r -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
 	echo 'Asia/Shanghai' >/etc/timezone && \
 	apk del tzdata
