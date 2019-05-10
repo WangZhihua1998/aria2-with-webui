@@ -1361,11 +1361,11 @@ static void poll_check_timeout(struct connection *conn) {
 /* Format [when] as an RFC1123 date, stored in the specified buffer.  The same
  * buffer is returned for convenience.
  */
-#define DATE_LEN 30 /* strlen("Fri, 28 Feb 2003 00:02:08 GMT")+1 */
+#define DATE_LEN 30 /* strlen("Fri, 28 Feb 2003 00:02:08 CST")+1 */
 static char *rfc1123_date(char *dest, const time_t when) {
     time_t when_copy = when;
     if (strftime(dest, DATE_LEN,
-                 "%a, %d %b %Y %H:%M:%S GMT", gmtime(&when_copy)) == 0)
+                 "%a, %d %b %Y %H:%M:%S CST", localtime(&when_copy)) == 0)
         errx(1, "strftime() failed [%s]", dest);
     return dest;
 }
