@@ -1857,7 +1857,7 @@ static void generate_dir_listing(struct connection *conn, const char *path) {
 			break;		
 		}
             appendl(listing, spaces,8+maxlen-strlen(list[i]->name));
-            appendf(listing, "%.1f %s\n", fsize, size_unit);
+            appendf(listing, "%.1f\t%s\n", fsize, size_unit);
 	}
      
     }
