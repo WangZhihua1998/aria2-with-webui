@@ -12,7 +12,6 @@ RUN apk update && \
 	git clone https://github.com/ziahamza/webui-aria2 /aria2-webui && \
 	rm /aria2-webui/.git* -rf && \
 	apk del git && \
-	apk add --no-cache --update darkhttpd && \
 	apk add --no-cache tzdata && \
 	cp -r -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
 	echo 'Asia/Shanghai' >/etc/timezone && \
@@ -21,6 +20,7 @@ RUN apk update && \
 ADD files/start.sh /conf-copy/start.sh
 ADD files/aria2.conf /conf-copy/aria2.conf
 ADD files/on-complete.sh /conf-copy/on-complete.sh
+ADD files/darkhttpd /usr/bin/darkhttpd
 
 RUN chmod +x /conf-copy/start.sh
 
