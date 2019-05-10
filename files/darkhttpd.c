@@ -1361,15 +1361,23 @@ static void poll_check_timeout(struct connection *conn) {
 /* Format [when] as an RFC1123 date, stored in the specified buffer.  The same
  * buffer is returned for convenience.
  */
-#define DATE_LEN 30 /* strlen("Fri, 28 Feb 2003 00:02:08 CST")+1 */
+#define DATE_LEN 30 /* strlen("Fri, 28 Feb 2003 00:02:08 CMT")+1 */
 static char *rfc1123_date(char *dest, const time_t when) {
+    time_t when_copy = when;
+    if (strftime(dest, DATE_LEN,
+                 "%a, %d %b %Y %H:%M:%S GMT", gmtime(&when_copy)) == 0)
+        errx(1, "strftime() failed [%s]", dest);
+    return dest;
+}
+/*China Standard Time 
+ */
+static char *cst_date(char *dest, const time_t when) {
     time_t when_copy = when;
     if (strftime(dest, DATE_LEN,
                  "%a, %d %b %Y %H:%M:%S CST", localtime(&when_copy)) == 0)
         errx(1, "strftime() failed [%s]", dest);
     return dest;
 }
-
 /* Decode URL by converting %XX (where XX are hexadecimal digits) to the
  * character it represents.  Don't forget to free the return value.
  */
@@ -1776,7 +1784,9 @@ static void generate_dir_listing(struct connection *conn, const char *path) {
     size_t maxlen = 2; /* There has to be ".." */
     int i;
     struct apbuf *listing;
-
+    double fsize = 0;
+    int size_index = 0;
+    char size_unit[4] = "B";
     listsize = make_sorted_dirlist(path, &list);
     if (listsize == -1) {
         default_reply(conn, 500, "Internal Server Error",
@@ -1797,8 +1807,8 @@ static void generate_dir_listing(struct connection *conn, const char *path) {
     append(listing,urldecode(conn->url));
     append(listing, "</h1>\n<tt><pre>\n");
 
-    spaces = xmalloc(maxlen);
-    memset(spaces, ' ', maxlen);
+    spaces = xmalloc(maxlen+8);
+    memset(spaces, ' ', maxlen+8);
 
     for (i=0; i<listsize; i++) {
         /* If a filename is made up of entirely unsafe chars,
@@ -1817,9 +1827,39 @@ static void generate_dir_listing(struct connection *conn, const char *path) {
         if (list[i]->is_dir)
             append(listing, "/\n");
         else {
-            appendl(listing, spaces, maxlen-strlen(list[i]->name));
-            appendf(listing, "%10llu\n", llu(list[i]->size));
-        }
+		fsize = list[i]->size;
+		size_index = 0;
+		while(fsize>1024){
+			fsize /= 1024;
+			size_index += 1;
+		}
+		switch(size_index){
+		case 0:
+			memcpy(size_unit,"B",2);
+			break;		
+		case 1:
+			memcpy(size_unit,"KiB",4);
+			break;		
+		case 2:
+			memcpy(size_unit,"MiB",4);
+			break;		
+		case 3:
+			memcpy(size_unit,"GiB",4);
+			break;		
+		case 4:
+			memcpy(size_unit,"TiB",4);
+			break;		
+		case 5:
+			memcpy(size_unit,"PiB",4);
+			break;		
+		case 6:
+			memcpy(size_unit,"EiB",4);
+			break;		
+		}
+            appendl(listing, spaces,8+maxlen-strlen(list[i]->name));
+            appendf(listing, "%.1f %s\n", fsize, size_unit);
+	}
+     
     }
 
     cleanup_sorted_dirlist(list, listsize);
@@ -1830,7 +1870,7 @@ static void generate_dir_listing(struct connection *conn, const char *path) {
      "</pre></tt>\n"
      "<hr>\n");
 
-    rfc1123_date(date, now);
+    cst_date(date, now);
     append(listing, generated_on(date));
     append(listing, "</body>\n</html>\n");
 
