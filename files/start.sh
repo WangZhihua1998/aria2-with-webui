@@ -14,6 +14,7 @@ if [ ! -f /data/log.html ]; then
 fi
 	
 chmod +x /conf/on-complete.sh
+chmod +x /usr/bin/darkhttpd
 touch /conf/aria2.session
 
 darkhttpd /aria2-webui/docs --port 80 &
