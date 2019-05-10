@@ -23,6 +23,7 @@ ADD files/on-complete.sh /conf-copy/on-complete.sh
 ADD files/darkhttpd /usr/bin/darkhttpd
 
 RUN chmod +x /conf-copy/start.sh
+RUN chmod +x /usr/bin/darkhttpd
 
 WORKDIR /
 VOLUME ["/data"]
